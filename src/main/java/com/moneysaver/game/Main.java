@@ -1,25 +1,20 @@
 package com.moneysaver.game;
 
-import com.moneysaver.model.Transaction;
+import com.moneysaver.controller.BudgetController;
 import com.moneysaver.service.BudgetTracker;
 import com.moneysaver.ui.ConsoleMenu;
 
 public class Main {
     public static void main(String[] args) {
-
-//        BudgetTracker tracker = new BudgetTracker();
-//
-//        tracker.addTransaction(new Transaction("income", 5000, "salary"));
-//        tracker.addTransaction(new Transaction("expense", 1200, "food"));
-//        tracker.addTransaction(new Transaction("expense", 800, "transport"));
-//
-//        System.out.println("Income: " + tracker.getTotalIncome());
-//        System.out.println("Expenses: " + tracker.getTotalExpenses());
-//        System.out.println("Savings: " + tracker.getSavings());
-
+        // Service layer
         BudgetTracker tracker = new BudgetTracker();
-        ConsoleMenu consoleMenu = new ConsoleMenu(tracker);
 
-        consoleMenu.start();
+        // Controller layer
+        BudgetController budgetController = new BudgetController(tracker);
+
+        // UI layer
+        ConsoleMenu menu = new ConsoleMenu(budgetController);
+
+        menu.start();
     }
 }

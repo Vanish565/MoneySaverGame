@@ -1,16 +1,18 @@
 package com.moneysaver.ui;
 
-import com.moneysaver.model.Transaction;
-import com.moneysaver.service.BudgetTracker;
+import com.moneysaver.controller.BudgetController;
+import com.moneysaver.model.Category;
+import com.moneysaver.model.IncomeType;
 
 import java.util.Scanner;
 
 public class ConsoleMenu {
-    private BudgetTracker tracker;
+
+    private BudgetController budgetController;
     private Scanner scanner;
 
-    public ConsoleMenu(BudgetTracker tracker) {
-        this.tracker = tracker;
+    public ConsoleMenu(BudgetController budgetController) {
+        this.budgetController = budgetController;
         this.scanner = new Scanner(System.in);
     }
 
@@ -21,7 +23,7 @@ public class ConsoleMenu {
             System.out.println("2. Add Expense");
             System.out.println("3. View Stats");
             System.out.println("4. Exit");
-            System.out.print("Choose option: ");
+            System.out.print("Choose: ");
 
             int choice = scanner.nextInt();
 
@@ -33,36 +35,56 @@ public class ConsoleMenu {
                     System.out.println("Goodbye!");
                     return;
                 }
-                default -> System.out.println("Invalid option");
             }
         }
     }
 
     private void addIncome() {
-        System.out.print("Enter amount: ");
+        System.out.print("Amount: ");
         double amount = scanner.nextDouble();
 
-        tracker.addTransaction(
-                new Transaction("income", amount, "salary")
-        );
+        System.out.println("\nSelect income type:");
+
+        IncomeType[] incomeType = IncomeType.values();
+
+        for(int i =0; i < incomeType.length; i++){
+            System.out.println((i+1) + ". " + incomeType[i]);
+        }
+
+        System.out.print("Choice: ");
+        int choice = scanner.nextInt();
+        IncomeType selectedIncomeType = incomeType[choice-1];
+
+        budgetController.addIncome(amount,  selectedIncomeType);
+
+        System.out.println("Income added under: " + selectedIncomeType);
     }
 
     private void addExpense() {
         System.out.print("Enter amount: ");
         double amount = scanner.nextDouble();
 
-        System.out.print("Enter category: ");
-        String category = scanner.next();
+        System.out.println("\nSelect category:");
 
-        tracker.addTransaction(
-                new Transaction("expense", amount, category)
-        );
+        Category[] categories = Category.values();
+
+        for (int i = 0; i < categories.length; i++) {
+            System.out.println((i + 1) + ". " + categories[i]);
+        }
+
+        System.out.print("Choice: ");
+        int choice = scanner.nextInt();
+
+        Category selectedCategory = categories[choice - 1];
+
+        budgetController.addExpense(amount, selectedCategory);
+
+        System.out.println("Expense added under: " + selectedCategory);
     }
 
     private void showStats() {
-        System.out.println("Income: " + tracker.getTotalIncome());
-        System.out.println("Expenses: " + tracker.getTotalExpenses());
-        System.out.println("Savings: " + tracker.getSavings());
+        System.out.println("Income: " + budgetController.getIncome());
+        System.out.println("Expenses: " + budgetController.getExpenses());
+        System.out.println("Balance: " + budgetController.getBalance());
     }
-
 }

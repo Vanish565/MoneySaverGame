@@ -31,7 +31,7 @@ public class BudgetTracker {
         return total;
     }
 
-    public double getSavings() {
+    public double getBalance() {
         return getTotalIncome() - getTotalExpenses();
     }
 }
