@@ -1,5 +1,6 @@
 package com.moneysaver.service;
 
+import com.moneysaver.model.Category;
 import com.moneysaver.model.Transaction;
 import java.util.*;
 
@@ -33,5 +34,22 @@ public class BudgetTracker {
 
     public double getBalance() {
         return getTotalIncome() - getTotalExpenses();
+    }
+
+    public Map<Category, Double> getSpendingByCategory() {
+        Map<Category, Double> spending = new HashMap<>();
+        for (Transaction transaction : transactions) {
+            if (transaction.getType().equals("expense"))
+            {
+                Category category = transaction.getCategory();
+                double amount = transaction.getAmount();
+
+                spending.put(
+                        category,
+                        spending.getOrDefault(category,0.0) + amount
+                );
+            }
+        }
+        return spending;
     }
 }

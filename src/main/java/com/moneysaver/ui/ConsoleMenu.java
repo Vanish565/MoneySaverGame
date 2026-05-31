@@ -1,9 +1,11 @@
 package com.moneysaver.ui;
 
+
 import com.moneysaver.controller.BudgetController;
 import com.moneysaver.model.Category;
 import com.moneysaver.model.IncomeType;
 
+import java.util.Map;
 import java.util.Scanner;
 
 public class ConsoleMenu {
@@ -22,19 +24,27 @@ public class ConsoleMenu {
             System.out.println("1. Add Income");
             System.out.println("2. Add Expense");
             System.out.println("3. View Stats");
-            System.out.println("4. Exit");
+            System.out.println("4. View Spending By Category");
+            System.out.println("5. Exit");
             System.out.print("Choose: ");
 
+            if (!scanner.hasNextInt()) {
+                System.out.println("Please enter a number.");
+                scanner.next();
+                continue;
+            }
             int choice = scanner.nextInt();
 
             switch (choice) {
                 case 1 -> addIncome();
                 case 2 -> addExpense();
                 case 3 -> showStats();
-                case 4 -> {
+                case 4 -> showSpendingByCategory();
+                case 5 -> {
                     System.out.println("Goodbye!");
                     return;
                 }
+                default -> System.out.println("Invalid option. Try again.");
             }
         }
     }
@@ -57,7 +67,7 @@ public class ConsoleMenu {
 
         budgetController.addIncome(amount,  selectedIncomeType);
 
-        System.out.println("Income added under: " + selectedIncomeType);
+        System.out.println("Income recorded: " + selectedIncomeType + " | R" + amount);
     }
 
     private void addExpense() {
@@ -79,12 +89,22 @@ public class ConsoleMenu {
 
         budgetController.addExpense(amount, selectedCategory);
 
-        System.out.println("Expense added under: " + selectedCategory);
+        System.out.println("Expense recorded: " + selectedCategory + " | R" + amount);
     }
 
     private void showStats() {
         System.out.println("Income: " + budgetController.getIncome());
         System.out.println("Expenses: " + budgetController.getExpenses());
         System.out.println("Balance: " + budgetController.getBalance());
+    }
+
+    private void showSpendingByCategory() {
+        Map<Category, Double> spending = budgetController.getSpendingByCategory();
+
+        System.out.println("\n=== Spending By Category ===");
+
+        for (Map.Entry<Category, Double> entry : spending.entrySet()) {
+            System.out.printf("%-15s R %.2f%n", entry.getKey(), entry.getValue());
+        }
     }
 }
