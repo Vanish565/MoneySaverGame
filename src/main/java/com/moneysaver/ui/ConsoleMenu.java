@@ -51,7 +51,7 @@ public class ConsoleMenu {
 
     private void addIncome() {
         System.out.print("Amount: ");
-        double amount = scanner.nextDouble();
+        double amount = getValidAmount();
 
         System.out.println("\nSelect income type:");
 
@@ -62,7 +62,8 @@ public class ConsoleMenu {
         }
 
         System.out.print("Choice: ");
-        int choice = scanner.nextInt();
+        int choice = getValidMenuChoice(1, incomeType.length);
+
         IncomeType selectedIncomeType = incomeType[choice-1];
 
         budgetController.addIncome(amount,  selectedIncomeType);
@@ -72,7 +73,7 @@ public class ConsoleMenu {
 
     private void addExpense() {
         System.out.print("Enter amount: ");
-        double amount = scanner.nextDouble();
+        double amount = getValidAmount();
 
         System.out.println("\nSelect category:");
 
@@ -83,7 +84,7 @@ public class ConsoleMenu {
         }
 
         System.out.print("Choice: ");
-        int choice = scanner.nextInt();
+        int choice = getValidMenuChoice(1, categories.length);
 
         Category selectedCategory = categories[choice - 1];
 
@@ -105,6 +106,55 @@ public class ConsoleMenu {
 
         for (Map.Entry<Category, Double> entry : spending.entrySet()) {
             System.out.printf("%-15s R %.2f%n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    // method to check whether the amount enter is valid
+    // no letters, no negative numbers, no special characters
+    private double getValidAmount() {
+
+        while (true) {
+
+            System.out.print("Enter amount: ");
+
+            if (!scanner.hasNextDouble()) {
+                System.out.println("Invalid amount. Please enter a number.");
+                scanner.next(); // consume the invalid input
+                continue;
+            }
+
+            double amount = scanner.nextDouble();
+
+            if (amount <= 0) {
+                System.out.println("Amount must be greater than 0.");
+                continue;
+            }
+
+            return amount;
+        }
+    }
+
+
+    // checks that the choices is valid
+    private int getValidMenuChoice(int min, int max) {
+
+        while (true) {
+
+            System.out.print("Choose: ");
+
+            if (!scanner.hasNextInt()) {
+                System.out.println("Please enter a valid menu option.");
+                scanner.next();
+                continue;
+            }
+
+            int choice = scanner.nextInt();
+            if (choice < min || choice > max) {
+                System.out.println("Please choose between " + min + " and " + max + ".");
+                continue;
+            }
+
+            return choice;
         }
     }
 }
