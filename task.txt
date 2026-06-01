@@ -1,0 +1,31 @@
+1 June 2026:
+    added view income type
+    To Do list:
+        redesign the console menu from:
+        1. Add Income
+        2. Add Expense
+        3. View Stats
+        4. View Spending By Category
+        5. View Income By Type
+        6. Exit
+
+        to:
+            1. Add Income
+            2. Add Expense
+            3. View Details
+            4. Exit
+
+            === VIEW DETAILS ===
+
+            1. Summary
+            2. Income Breakdown
+            3. Expense Breakdown
+            4. Back
+
+            ==Income Breakdown==        ==Expense Breakdown==
+            SALARY      R10000          FOOD          R1200
+            FREELANCE   R1500           TRANSPORT     R800
+            BONUS       R500            RENT          R3000
+
+
+

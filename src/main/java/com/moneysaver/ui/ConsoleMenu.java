@@ -23,26 +23,17 @@ public class ConsoleMenu {
             System.out.println("\n=== MONEY SAVER GAME ===");
             System.out.println("1. Add Income");
             System.out.println("2. Add Expense");
-            System.out.println("3. View Stats");
-            System.out.println("4. View Spending By Category");
-            System.out.println("5. View Income By Category");
-            System.out.println("6. Exit");
+            System.out.println("3. View Details");
+            System.out.println("4. Exit");
             System.out.print("Choose: ");
 
-            if (!scanner.hasNextInt()) {
-                System.out.println("Please enter a number.");
-                scanner.next();
-                continue;
-            }
-            int choice = scanner.nextInt();
+            int choice = getValidMenuChoice(1,4);
 
             switch (choice) {
                 case 1 -> addIncome();
                 case 2 -> addExpense();
-                case 3 -> showStats();
-                case 4 -> showSpendingByCategory();
-                case 5 -> showIncomeByCategory();
-                case 6 -> {
+                case 3 -> showDetails();
+                case 4 -> {
                     System.out.println("Goodbye!");
                     return;
                 }
@@ -52,7 +43,6 @@ public class ConsoleMenu {
     }
 
     private void addIncome() {
-        System.out.print("Amount: ");
         double amount = getValidAmount();
 
         System.out.println("\nSelect income type:");
@@ -74,7 +64,6 @@ public class ConsoleMenu {
     }
 
     private void addExpense() {
-        System.out.print("Enter amount: ");
         double amount = getValidAmount();
 
         System.out.println("\nSelect category:");
@@ -93,6 +82,27 @@ public class ConsoleMenu {
         budgetController.addExpense(amount, selectedCategory);
 
         System.out.println("Expense recorded: " + selectedCategory + " | R" + amount);
+    }
+
+    private void showDetails(){
+        while (true) {
+            System.out.println("\n=== View Details ===");
+            System.out.println("1. Summary");
+            System.out.println("2. Income Breakdown");
+            System.out.println("3. Spending Breakdown");
+            System.out.println("4. Back");
+            System.out.print("Choose: ");
+
+            int choice = getValidMenuChoice(1, 4);
+
+            switch (choice) {
+                case 1 -> showStats();
+                case 2 -> showSpendingByCategory();
+                case 3 -> showIncomeByCategory();
+                case 4 -> {return;}
+                default -> System.out.println("Invalid option. Try again.");
+            }
+        }
     }
 
     private void showStats() {
@@ -169,4 +179,5 @@ public class ConsoleMenu {
             return choice;
         }
     }
+
 }
