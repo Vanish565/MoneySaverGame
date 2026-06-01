@@ -42,4 +42,8 @@ public class BudgetController {
     public Map<Category, Double> getSpendingByCategory() {
         return budgetTracker.getSpendingByCategory();
     }
+
+    public Map<IncomeType, Double> getIncomeByCategory() {
+        return budgetTracker.getIncomeByCategory();
+    }
 }

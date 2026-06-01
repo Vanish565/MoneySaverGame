@@ -1,6 +1,7 @@
 package com.moneysaver.service;
 
 import com.moneysaver.model.Category;
+import com.moneysaver.model.IncomeType;
 import com.moneysaver.model.Transaction;
 import java.util.*;
 
@@ -51,5 +52,30 @@ public class BudgetTracker {
             }
         }
         return spending;
+    }
+
+    /*
+    questions to answer:
+    where does the income data currently live? - current no where as it is not saved anywhere
+    what should getIncomeType return -> it should get a list of all income and its type
+
+    task:
+    implement the getIncomeType function.
+    implement search for transaction function
+    implement a database
+     */
+
+    public Map<IncomeType, Double> getIncomeByCategory() {
+        Map<IncomeType, Double> income = new HashMap<>();
+        for (Transaction transaction : transactions) {
+            if(transaction.getType().equals("income"))
+            {
+                IncomeType incomeType = transaction.getIncomeType();
+                double amount = transaction.getAmount();
+                income.put(incomeType,
+                        income.getOrDefault(incomeType,0.0) + amount);
+            }
+        }
+        return income;
     }
 }

@@ -25,7 +25,8 @@ public class ConsoleMenu {
             System.out.println("2. Add Expense");
             System.out.println("3. View Stats");
             System.out.println("4. View Spending By Category");
-            System.out.println("5. Exit");
+            System.out.println("5. View Income By Category");
+            System.out.println("6. Exit");
             System.out.print("Choose: ");
 
             if (!scanner.hasNextInt()) {
@@ -40,7 +41,8 @@ public class ConsoleMenu {
                 case 2 -> addExpense();
                 case 3 -> showStats();
                 case 4 -> showSpendingByCategory();
-                case 5 -> {
+                case 5 -> showIncomeByCategory();
+                case 6 -> {
                     System.out.println("Goodbye!");
                     return;
                 }
@@ -105,6 +107,16 @@ public class ConsoleMenu {
         System.out.println("\n=== Spending By Category ===");
 
         for (Map.Entry<Category, Double> entry : spending.entrySet()) {
+            System.out.printf("%-15s R %.2f%n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    // displays the income by its type
+    private void showIncomeByCategory() {
+        Map<IncomeType, Double> income = budgetController.getIncomeByCategory();
+        System.out.println("\n=== Income By Category ===");
+
+        for (Map.Entry<IncomeType, Double> entry : income.entrySet()) {
             System.out.printf("%-15s R %.2f%n", entry.getKey(), entry.getValue());
         }
     }
