@@ -4,6 +4,7 @@ import com.moneysaver.controller.BudgetController;
 import com.moneysaver.service.BudgetTracker;
 import com.moneysaver.ui.ConsoleMenu;
 
+
 public class Main {
     public static void main(String[] args) {
         // Service layer

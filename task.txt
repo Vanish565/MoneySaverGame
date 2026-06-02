@@ -29,3 +29,163 @@
 
 
 
+2 June 2026
+tasks:
+    - set up a simple database
+
+    current stat of game
+    ConsoleMenu → BudgetController → BudgetTracker → List<Transaction>
+    System lives on memory and when the app closes, everything disappears
+
+    Goal:
+    App starts → load JSON → restore transactions
+    User adds income/expense → update list
+    App ends → save JSON
+
+    MONEY SAVER GAME — PROJECT NOTES (SO FAR)
+
+    PROJECT GOAL
+    Build a budgeting system with gamification features
+    Track income and expenses
+    Group spending by category
+    Show financial summaries
+    Later add levels, XP, and game mechanics
+    SYSTEM ARCHITECTURE (LAYERED DESIGN)
+
+    ConsoleMenu (UI Layer)
+    ↓
+    BudgetController (Control Layer)
+    ↓
+    BudgetTracker (Business Logic Layer)
+    ↓
+    TransactionRepository (Persistence Layer - JSON)
+
+    RESPONSIBILITIES
+
+    ConsoleMenu:
+
+    Handles user input
+    Displays menus
+    Validates input (numbers, ranges)
+    Calls controller methods
+
+    BudgetController:
+
+    Acts as a bridge between UI and logic
+    Routes requests to BudgetTracker
+    Keeps UI clean from business logic
+
+    BudgetTracker:
+
+    Owns List<Transaction>
+    Adds income and expenses
+    Calculates:
+    total income
+    total expenses
+    balance
+    spending by category
+    Maintains application state
+
+    TransactionRepository:
+
+    Saves transactions to JSON file
+    Loads transactions from JSON file
+    Uses Gson for serialization/deserialization
+    ONLY handles storage (no business logic)
+    DESIGN PRINCIPLES LEARNED
+
+    Separation of Concerns:
+
+    UI handles interaction only
+    Tracker handles logic only
+    Repository handles storage only
+
+    Encapsulation:
+
+    File handling is hidden inside repository
+    Other layers do not know storage details
+
+    Dependency Injection:
+
+    BudgetTracker receives repository from outside
+    It does not create it internally
+
+    Data Ownership Principle:
+
+    BudgetTracker owns transaction list
+    It is responsible for maintaining consistency
+    MENU DESIGN IMPROVEMENT
+
+    Instead of cluttered menus:
+
+    Main Menu
+    → View Details
+    → Summary
+    → Income Breakdown
+    → Spending Breakdown
+
+    This improves usability and scalability.
+
+    DATA GROUPING LOGIC
+
+    Used pattern:
+
+    Loop through transactions
+    Filter by type (income/expense)
+    Group by category or income type
+    Sum values using a Map
+    CURRENT FEATURE IN DEVELOPMENT
+
+    JSON Persistence System:
+
+    Flow:
+    App Start → Load JSON → Restore Transactions
+    User Action → Update List → Save JSON
+
+    Library used:
+
+    Gson
+
+    File:
+
+    transactions.json (stored in project folder)
+    NEXT STEPS
+    Build TransactionRepository
+    Implement saveTransactions()
+    Implement loadTransactions()
+    Connect repository to BudgetTracker
+    Auto-save after income/expense
+    Auto-load on application start
+    CORE MENTAL MODEL
+
+    UI → Controller → Tracker → Repository
+
+    (User Interaction → Routing → Business Logic → Storage)
+
+    On application start:
+    - BudgetTracker is created
+    - BudgetTracker requests transactions from TransactionRepository
+    - TransactionRepository:
+        - if file exists → load JSON and return list
+        - if file does not exist → create file and return empty list
+    - BudgetTracker stores returned list internally
+
+    LOAD flow
+    JSON file
+       ↓
+    TransactionRepository
+       ↓
+    TransactionStore
+       ↓
+    List<Transaction>
+       ↓
+    BudgetTracker
+
+    SAVE FLOW
+    BudgetTracker (List<Transaction>)
+       ↓
+    TransactionStore
+       ↓
+    TransactionRepository
+       ↓
+    JSON file
