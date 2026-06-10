@@ -13,7 +13,19 @@ import java.util.List;
 
 public class TransactionRepository {
     private final String fileName;
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(
+                    java.time.LocalDate.class,
+                    (com.google.gson.JsonSerializer<java.time.LocalDate>) (src, typeOfSrc, context) ->
+                            new com.google.gson.JsonPrimitive(src.toString())
+            )
+            .registerTypeAdapter(
+                    java.time.LocalDate.class,
+                    (com.google.gson.JsonDeserializer<java.time.LocalDate>) (json, typeOfT, context) ->
+                            java.time.LocalDate.parse(json.getAsString())
+            )
+            .create();
 
     public TransactionRepository(String fileName) {
         this.fileName = fileName;

@@ -97,8 +97,8 @@ public class ConsoleMenu {
 
             switch (choice) {
                 case 1 -> showStats();
-                case 2 -> showSpendingByCategory();
-                case 3 -> showIncomeByCategory();
+                case 2 -> showIncomeByCategory();
+                case 3 -> showSpendingByCategory();
                 case 4 -> {return;}
                 default -> System.out.println("Invalid option. Try again.");
             }
