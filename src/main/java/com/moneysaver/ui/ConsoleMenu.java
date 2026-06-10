@@ -4,7 +4,9 @@ package com.moneysaver.ui;
 import com.moneysaver.controller.BudgetController;
 import com.moneysaver.model.Category;
 import com.moneysaver.model.IncomeType;
+import com.moneysaver.model.Transaction;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -90,16 +92,18 @@ public class ConsoleMenu {
             System.out.println("1. Summary");
             System.out.println("2. Income Breakdown");
             System.out.println("3. Spending Breakdown");
-            System.out.println("4. Back");
+            System.out.println("4. Transaction History");
+            System.out.println("5. Back");
             System.out.print("Choose: ");
 
-            int choice = getValidMenuChoice(1, 4);
+            int choice = getValidMenuChoice(1, 5);
 
             switch (choice) {
                 case 1 -> showStats();
                 case 2 -> showIncomeByCategory();
                 case 3 -> showSpendingByCategory();
-                case 4 -> {return;}
+                case 4 -> showTransactionHistory();
+                case 5 -> {return;}
                 default -> System.out.println("Invalid option. Try again.");
             }
         }
@@ -115,6 +119,9 @@ public class ConsoleMenu {
         Map<Category, Double> spending = budgetController.getSpendingByCategory();
 
         System.out.println("\n=== Spending By Category ===");
+        System.out.printf("%-15s %s%n",
+                "EXPENSE TYPE", "AMOUNT");
+        System.out.println("-----------------------------");
 
         for (Map.Entry<Category, Double> entry : spending.entrySet()) {
             System.out.printf("%-15s R %.2f%n", entry.getKey(), entry.getValue());
@@ -125,9 +132,42 @@ public class ConsoleMenu {
     private void showIncomeByCategory() {
         Map<IncomeType, Double> income = budgetController.getIncomeByCategory();
         System.out.println("\n=== Income By Category ===");
+        System.out.printf("%-15s %s%n",
+                "INCOME TYPE", "AMOUNT");
+        System.out.println("-----------------------------");
 
         for (Map.Entry<IncomeType, Double> entry : income.entrySet()) {
             System.out.printf("%-15s R %.2f%n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void showTransactionHistory() {
+        List<Transaction> transactions = budgetController.getTransactions();
+        System.out.println("\n=== TRANSACTION HISTORY ===");
+        System.out.printf("%-12s %-10s %-18s %s%n",
+                "DATE", "TYPE", "CATEGORY/INCOME", "AMOUNT");
+        System.out.println("------------------------------------------------");
+
+        for (Transaction t : transactions) {
+
+            String date = t.getDate().toString();
+            String type = t.getType().toUpperCase();
+
+            String categoryOrIncome;
+
+            if (t.getType().equals("expense")) {
+                categoryOrIncome = String.valueOf(t.getCategory());
+            } else {
+                categoryOrIncome = String.valueOf(t.getIncomeType());
+            }
+
+            System.out.printf(
+                    "%-12s %-10s %-18s R %.2f%n",
+                    date,
+                    type,
+                    categoryOrIncome,
+                    t.getAmount()
+            );
         }
     }
 

@@ -90,4 +90,8 @@ public class BudgetTracker {
         }
         return income;
     }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
 }

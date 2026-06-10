@@ -5,6 +5,7 @@ import com.moneysaver.model.IncomeType;
 import com.moneysaver.model.Transaction;
 import com.moneysaver.service.BudgetTracker;
 
+import java.util.List;
 import java.util.Map;
 
 public class BudgetController {
@@ -45,5 +46,9 @@ public class BudgetController {
 
     public Map<IncomeType, Double> getIncomeByCategory() {
         return budgetTracker.getIncomeByCategory();
+    }
+
+    public List<Transaction> getTransactions(){
+        return budgetTracker.getTransactions();
     }
 }

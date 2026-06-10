@@ -2,9 +2,15 @@
   "transactions": [
     {
       "type": "income",
-      "amount": 52000.0,
+      "amount": 30000.0,
       "incomeType": "SALARY",
       "date": "2026-06-10"
+    },
+    {
+      "type": "expense",
+      "amount": 3000.0,
+      "category": "FOOD",
+      "date": "2026-06-11"
     }
   ]
 }
