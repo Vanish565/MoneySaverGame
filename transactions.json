@@ -1,0 +1,16 @@
+{
+  "transactions": [
+    {
+      "type": "income",
+      "amount": 2000.0,
+      "incomeType": "SALARY",
+      "date": {}
+    },
+    {
+      "type": "expense",
+      "amount": 1000.0,
+      "category": "FOOD",
+      "date": {}
+    }
+  ]
+}

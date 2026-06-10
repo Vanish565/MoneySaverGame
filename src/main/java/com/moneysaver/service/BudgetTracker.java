@@ -3,13 +3,25 @@ package com.moneysaver.service;
 import com.moneysaver.model.Category;
 import com.moneysaver.model.IncomeType;
 import com.moneysaver.model.Transaction;
+import com.moneysaver.repository.TransactionRepository;
+
 import java.util.*;
 
 public class BudgetTracker {
-    private List<Transaction> transactions =  new ArrayList<>();
+//    private List<Transaction> transactions =  new ArrayList<>();
+
+    private TransactionRepository repository;
+    private List<Transaction> transactions;
+
+    // constructor
+    public BudgetTracker(TransactionRepository repository) {
+        this.repository = repository;
+        this.transactions = repository.loadTransactions();
+    }
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
+        repository.saveTransactions(transactions);
     }
 
     public double getTotalIncome(){
