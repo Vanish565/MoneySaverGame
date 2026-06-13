@@ -6,6 +6,7 @@ import com.moneysaver.model.IncomeType;
 import com.moneysaver.model.Transaction;
 import com.moneysaver.repository.TransactionRepository;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class BudgetTracker {
@@ -100,6 +101,19 @@ public class BudgetTracker {
         List<Transaction> filtered = new ArrayList<>();
         for (Transaction transaction : transactions) {
             if(transaction.getType() == type) // ignore case sensitivity
+            {
+                filtered.add(transaction);
+            }
+        }
+        return filtered;
+    }
+
+    public List<Transaction> getTransactionsBetweenDate(LocalDate startDate, LocalDate endDate){
+        List<Transaction> filtered = new ArrayList<>();
+
+        for (Transaction transaction : transactions) {
+            LocalDate transactionDate = transaction.getDate();
+            if(!transactionDate.isBefore(startDate) && !transactionDate.isAfter(endDate))
             {
                 filtered.add(transaction);
             }

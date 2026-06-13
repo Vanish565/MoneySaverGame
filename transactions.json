@@ -4,19 +4,19 @@
       "type": "INCOME",
       "amount": 2000.0,
       "incomeType": "SALARY",
-      "date": "2026-06-13"
+      "date": "2026-06-10"
     },
     {
       "type": "EXPENSE",
       "expenseType": "FOOD",
       "amount": 200.0,
-      "date": "2026-06-13"
+      "date": "2026-06-11"
     },
     {
       "type": "INCOME",
       "amount": 2000.0,
       "incomeType": "FREELANCE",
-      "date": "2026-06-13"
+      "date": "2026-06-12"
     },
     {
       "type": "EXPENSE",

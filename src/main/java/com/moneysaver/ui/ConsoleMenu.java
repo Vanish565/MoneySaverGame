@@ -7,6 +7,8 @@ import com.moneysaver.model.FilterType;
 import com.moneysaver.model.IncomeType;
 import com.moneysaver.model.Transaction;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -94,19 +96,21 @@ public class ConsoleMenu {
             System.out.println("2. Income Breakdown");
             System.out.println("3. Spending Breakdown");
             System.out.println("4. Filter by Type");
-            System.out.println("5. Transaction History");
-            System.out.println("6. Back");
+            System.out.println("5. Filter by Date");
+            System.out.println("6. Transaction History");
+            System.out.println("7. Back");
             System.out.print("Choose: ");
 
-            int choice = getValidMenuChoice(1, 6);
+            int choice = getValidMenuChoice(1, 7);
 
             switch (choice) {
                 case 1 -> showStats();
                 case 2 -> showIncomeByCategory();
                 case 3 -> showSpendingByCategory();
                 case 4 -> filterByType();
-                case 5 -> showTransactionHistory();
-                case 6 -> {return;}
+                case 5 -> filterByDateRange();
+                case 6 -> showTransactionHistory();
+                case 7 -> {return;}
                 default -> System.out.println("Invalid option. Try again.");
             }
         }
@@ -144,22 +148,10 @@ public class ConsoleMenu {
         System.out.print("Choice: ");
         int choice = getValidMenuChoice(1, filterTypes.length);
         FilterType selectedFilterType = filterTypes[choice - 1];
-
-        System.out.println("\n=== FILTERED TRANSACTIONS ===");
-        System.out.printf("%-12s %-10s %-18s %s%n",
-                "DATE", "TYPE", "CATEGORY", "AMOUNT");
-
-        System.out.println("------------------------------------------------");
-
         List<Transaction> filteredTransactions = budgetController.getTransactionsByType(selectedFilterType);
 
-        for (Transaction transaction : filteredTransactions) {
-            System.out.printf("%-12s %-10s %-18s R %.2f%n",
-                    transaction.getDate(),
-                    transaction.getType(),
-                    transaction.getExpenseType(),
-                    transaction.getAmount());
-        }
+        System.out.println("\n=== FILTERED TRANSACTIONS ===");
+        displayTransactions(filteredTransactions);
     }
 
     // displays the income by its type
@@ -178,30 +170,51 @@ public class ConsoleMenu {
     private void showTransactionHistory() {
         List<Transaction> transactions = budgetController.getTransactions();
         System.out.println("\n=== TRANSACTION HISTORY ===");
+        displayTransactions(transactions);
+    }
+
+    private void filterByDateRange() {
+
+        System.out.println("\n=== Filter By Date Range ===");
+
+        System.out.print("Start Date ");
+        LocalDate startDate = getValidDate();
+
+        System.out.print("End Date ");
+        LocalDate endDate = getValidDate();
+
+        if (endDate.isBefore(startDate)) {
+            System.out.println("End date cannot be before start date.");
+            return;
+        }
+
+        List<Transaction> filtered =
+                budgetController.getTransactionsBetweenDates(startDate, endDate);
+
+        displayTransactions(filtered);
+    }
+
+    private void displayTransactions(List<Transaction> transactions)
+    {
+//        System.out.println("\n=== FILTERED TRANSACTIONS ===");
         System.out.printf("%-12s %-10s %-18s %s%n",
                 "DATE", "TYPE", "CATEGORY", "AMOUNT");
+
         System.out.println("------------------------------------------------");
 
-        for (Transaction t : transactions) {
+        String categoryOrIncome;
 
-            String date = t.getDate().toString();
-            FilterType type = t.getType();
-
-            String categoryOrIncome;
-
-            if (type.equals(FilterType.EXPENSE)) {
-                categoryOrIncome = String.valueOf(t.getExpenseType());
+        for (Transaction transaction : transactions) {
+            if (transaction.getType().equals(FilterType.EXPENSE)) {
+                categoryOrIncome = String.valueOf(transaction.getExpenseType());
             } else {
-                categoryOrIncome = String.valueOf(t.getIncomeType());
+                categoryOrIncome = String.valueOf(transaction.getIncomeType());
             }
-
-            System.out.printf(
-                    "%-12s %-10s %-18s R %.2f%n",
-                    date,
-                    type,
+            System.out.printf("%-12s %-10s %-18s R %.2f%n",
+                    transaction.getDate(),
+                    transaction.getType(),
                     categoryOrIncome,
-                    t.getAmount()
-            );
+                    transaction.getAmount());
         }
     }
 
@@ -251,6 +264,20 @@ public class ConsoleMenu {
             }
 
             return choice;
+        }
+    }
+
+    private LocalDate getValidDate() {
+        while (true) {
+            System.out.print("Enter date (yyyy-MM-dd): ");
+            String input = scanner.next().trim();
+
+            try {
+                return LocalDate.parse(input);
+            }
+            catch (DateTimeParseException e) {
+                System.out.println("Invalid date: " + input + ". Use yyyy-mm-dd.");
+            }
         }
     }
 

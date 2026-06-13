@@ -6,6 +6,7 @@ import com.moneysaver.model.IncomeType;
 import com.moneysaver.model.Transaction;
 import com.moneysaver.service.BudgetTracker;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -56,5 +57,10 @@ public class BudgetController {
     public List<Transaction> getTransactionsByType(FilterType type)
     {
         return budgetTracker.getTransactionsByType(type);
+    }
+
+    public List<Transaction> getTransactionsBetweenDates(LocalDate startDate, LocalDate endDate)
+    {
+        return budgetTracker.getTransactionsBetweenDate(startDate, endDate);
     }
 }
