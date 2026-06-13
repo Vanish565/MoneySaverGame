@@ -15,6 +15,12 @@ public class BudgetTracker {
     private TransactionRepository repository;
     private List<Transaction> transactions;
 
+    // constructor for testing purposes
+    public BudgetTracker()
+    {
+        this.transactions = new ArrayList<>();
+    }
+
     // constructor
     public BudgetTracker(TransactionRepository repository) {
         this.repository = repository;
@@ -23,7 +29,11 @@ public class BudgetTracker {
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
-        repository.saveTransactions(transactions);
+        if(this.repository != null)
+        {
+            repository.saveTransactions(transactions);
+        }
+
     }
 
     public double getTotalIncome(){
