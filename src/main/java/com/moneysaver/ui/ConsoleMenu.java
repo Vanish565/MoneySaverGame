@@ -2,7 +2,8 @@ package com.moneysaver.ui;
 
 
 import com.moneysaver.controller.BudgetController;
-import com.moneysaver.model.Category;
+import com.moneysaver.model.ExpenseType;
+import com.moneysaver.model.FilterType;
 import com.moneysaver.model.IncomeType;
 import com.moneysaver.model.Transaction;
 
@@ -70,7 +71,7 @@ public class ConsoleMenu {
 
         System.out.println("\nSelect category:");
 
-        Category[] categories = Category.values();
+        ExpenseType[] categories = ExpenseType.values();
 
         for (int i = 0; i < categories.length; i++) {
             System.out.println((i + 1) + ". " + categories[i]);
@@ -79,11 +80,11 @@ public class ConsoleMenu {
         System.out.print("Choice: ");
         int choice = getValidMenuChoice(1, categories.length);
 
-        Category selectedCategory = categories[choice - 1];
+        ExpenseType selectedExpenseType = categories[choice - 1];
 
-        budgetController.addExpense(amount, selectedCategory);
+        budgetController.addExpense(amount, selectedExpenseType);
 
-        System.out.println("Expense recorded: " + selectedCategory + " | R" + amount);
+        System.out.println("Expense recorded: " + selectedExpenseType + " | R" + amount);
     }
 
     private void showDetails(){
@@ -92,18 +93,20 @@ public class ConsoleMenu {
             System.out.println("1. Summary");
             System.out.println("2. Income Breakdown");
             System.out.println("3. Spending Breakdown");
-            System.out.println("4. Transaction History");
-            System.out.println("5. Back");
+            System.out.println("4. Filter by Type");
+            System.out.println("5. Transaction History");
+            System.out.println("6. Back");
             System.out.print("Choose: ");
 
-            int choice = getValidMenuChoice(1, 5);
+            int choice = getValidMenuChoice(1, 6);
 
             switch (choice) {
                 case 1 -> showStats();
                 case 2 -> showIncomeByCategory();
                 case 3 -> showSpendingByCategory();
-                case 4 -> showTransactionHistory();
-                case 5 -> {return;}
+                case 4 -> filterByType();
+                case 5 -> showTransactionHistory();
+                case 6 -> {return;}
                 default -> System.out.println("Invalid option. Try again.");
             }
         }
@@ -116,15 +119,46 @@ public class ConsoleMenu {
     }
 
     private void showSpendingByCategory() {
-        Map<Category, Double> spending = budgetController.getSpendingByCategory();
+        Map<ExpenseType, Double> spending = budgetController.getSpendingByCategory();
 
         System.out.println("\n=== Spending By Category ===");
         System.out.printf("%-15s %s%n",
                 "EXPENSE TYPE", "AMOUNT");
         System.out.println("-----------------------------");
 
-        for (Map.Entry<Category, Double> entry : spending.entrySet()) {
+        for (Map.Entry<ExpenseType, Double> entry : spending.entrySet()) {
             System.out.printf("%-15s R %.2f%n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    // filtering by Type
+    private void filterByType() {
+
+        FilterType[] filterTypes = FilterType.values();
+
+        System.out.println("\nFilter by: ");
+
+        for(int i = 0; i < filterTypes.length; i++){
+            System.out.println((i + 1) + ". " + filterTypes[i]);
+        }
+        System.out.print("Choice: ");
+        int choice = getValidMenuChoice(1, filterTypes.length);
+        FilterType selectedFilterType = filterTypes[choice - 1];
+
+        System.out.println("\n=== FILTERED TRANSACTIONS ===");
+        System.out.printf("%-12s %-10s %-18s %s%n",
+                "DATE", "TYPE", "CATEGORY", "AMOUNT");
+
+        System.out.println("------------------------------------------------");
+
+        List<Transaction> filteredTransactions = budgetController.getTransactionsByType(selectedFilterType);
+
+        for (Transaction transaction : filteredTransactions) {
+            System.out.printf("%-12s %-10s %-18s R %.2f%n",
+                    transaction.getDate(),
+                    transaction.getType(),
+                    transaction.getExpenseType(),
+                    transaction.getAmount());
         }
     }
 
@@ -145,18 +179,18 @@ public class ConsoleMenu {
         List<Transaction> transactions = budgetController.getTransactions();
         System.out.println("\n=== TRANSACTION HISTORY ===");
         System.out.printf("%-12s %-10s %-18s %s%n",
-                "DATE", "TYPE", "CATEGORY/INCOME", "AMOUNT");
+                "DATE", "TYPE", "CATEGORY", "AMOUNT");
         System.out.println("------------------------------------------------");
 
         for (Transaction t : transactions) {
 
             String date = t.getDate().toString();
-            String type = t.getType().toUpperCase();
+            FilterType type = t.getType();
 
             String categoryOrIncome;
 
-            if (t.getType().equals("expense")) {
-                categoryOrIncome = String.valueOf(t.getCategory());
+            if (type.equals(FilterType.EXPENSE)) {
+                categoryOrIncome = String.valueOf(t.getExpenseType());
             } else {
                 categoryOrIncome = String.valueOf(t.getIncomeType());
             }

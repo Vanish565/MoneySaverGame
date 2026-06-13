@@ -1,16 +1,28 @@
 {
   "transactions": [
     {
-      "type": "income",
-      "amount": 30000.0,
+      "type": "INCOME",
+      "amount": 2000.0,
       "incomeType": "SALARY",
-      "date": "2026-06-10"
+      "date": "2026-06-13"
     },
     {
-      "type": "expense",
+      "type": "EXPENSE",
+      "expenseType": "FOOD",
+      "amount": 200.0,
+      "date": "2026-06-13"
+    },
+    {
+      "type": "INCOME",
+      "amount": 2000.0,
+      "incomeType": "FREELANCE",
+      "date": "2026-06-13"
+    },
+    {
+      "type": "EXPENSE",
       "amount": 3000.0,
-      "category": "FOOD",
-      "date": "2026-06-11"
+      "expenseType": "RENT",
+      "date": "2026-06-13"
     }
   ]
 }

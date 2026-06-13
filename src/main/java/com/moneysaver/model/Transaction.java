@@ -4,40 +4,40 @@ import java.time.LocalDate;
 
 public class Transaction {
 
-    private String type; // income/expense
+    private FilterType type; // income/expense
     private double amount;
 
-    private Category category; // only for filtering expenses
+    private ExpenseType expenseType; // only for filtering expenses
     private IncomeType incomeType; // only for filtering income
 
     private LocalDate date;
 
     // EXPENSE constructor
-    public Transaction(double amount, Category category) {
-        this.type = "expense";
+    public Transaction(double amount, ExpenseType expenseType) {
+        this.type = FilterType.EXPENSE;
         this.amount = amount;
-        this.category = category;
+        this.expenseType = expenseType;
         this.incomeType = null;
         this.date = LocalDate.now();
     }
 
     // INCOME constructor
     public Transaction(double amount, IncomeType incomeType) {
-        this.type = "income";
+        this.type = FilterType.INCOME;
         this.amount = amount;
         this.incomeType = incomeType;
-        this.category = null;
+        this.expenseType = null;
         this.date = LocalDate.now();
     }
 
-    public String getType() { return type;}
+    public FilterType getType() { return this.type;}
 
     public double getAmount() {
         return amount;
     }
 
-    public Category getCategory() {
-        return category;
+    public ExpenseType getExpenseType() {
+        return expenseType;
     }
 
     public IncomeType getIncomeType() {return incomeType;}

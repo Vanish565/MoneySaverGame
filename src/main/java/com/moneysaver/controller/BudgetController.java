@@ -1,6 +1,7 @@
 package com.moneysaver.controller;
 
-import com.moneysaver.model.Category;
+import com.moneysaver.model.ExpenseType;
+import com.moneysaver.model.FilterType;
 import com.moneysaver.model.IncomeType;
 import com.moneysaver.model.Transaction;
 import com.moneysaver.service.BudgetTracker;
@@ -22,9 +23,9 @@ public class BudgetController {
         );
     }
 
-    public void addExpense(double amount, Category category) {
+    public void addExpense(double amount, ExpenseType expenseType) {
         budgetTracker.addTransaction(
-                new Transaction(amount, category)
+                new Transaction(amount, expenseType)
         );
     }
 
@@ -40,7 +41,7 @@ public class BudgetController {
         return budgetTracker.getBalance();
     }
 
-    public Map<Category, Double> getSpendingByCategory() {
+    public Map<ExpenseType, Double> getSpendingByCategory() {
         return budgetTracker.getSpendingByCategory();
     }
 
@@ -50,5 +51,10 @@ public class BudgetController {
 
     public List<Transaction> getTransactions(){
         return budgetTracker.getTransactions();
+    }
+
+    public List<Transaction> getTransactionsByType(FilterType type)
+    {
+        return budgetTracker.getTransactionsByType(type);
     }
 }

@@ -1,6 +1,7 @@
 package com.moneysaver.service;
 
-import com.moneysaver.model.Category;
+import com.moneysaver.model.ExpenseType;
+import com.moneysaver.model.FilterType;
 import com.moneysaver.model.IncomeType;
 import com.moneysaver.model.Transaction;
 import com.moneysaver.repository.TransactionRepository;
@@ -27,7 +28,7 @@ public class BudgetTracker {
     public double getTotalIncome(){
         double total = 0;
         for(Transaction transaction : transactions){
-            if(transaction.getType().equals("income"))
+            if(transaction.getType().equals(FilterType.INCOME))
             {
                 total += transaction.getAmount();
             }
@@ -38,7 +39,7 @@ public class BudgetTracker {
     public double getTotalExpenses() {
         double total = 0;
         for (Transaction transaction : transactions) {
-            if (transaction.getType().equals("expense")) {
+            if (transaction.getType().equals(FilterType.EXPENSE)) {
                 total += transaction.getAmount();
             }
         }
@@ -49,17 +50,17 @@ public class BudgetTracker {
         return getTotalIncome() - getTotalExpenses();
     }
 
-    public Map<Category, Double> getSpendingByCategory() {
-        Map<Category, Double> spending = new HashMap<>();
+    public Map<ExpenseType, Double> getSpendingByCategory() {
+        Map<ExpenseType, Double> spending = new HashMap<>();
         for (Transaction transaction : transactions) {
-            if (transaction.getType().equals("expense"))
+            if (transaction.getType().equals(FilterType.EXPENSE))
             {
-                Category category = transaction.getCategory();
+                ExpenseType expenseType = transaction.getExpenseType();
                 double amount = transaction.getAmount();
 
                 spending.put(
-                        category,
-                        spending.getOrDefault(category,0.0) + amount
+                        expenseType,
+                        spending.getOrDefault(expenseType,0.0) + amount
                 );
             }
         }
@@ -80,7 +81,7 @@ public class BudgetTracker {
     public Map<IncomeType, Double> getIncomeByCategory() {
         Map<IncomeType, Double> income = new HashMap<>();
         for (Transaction transaction : transactions) {
-            if(transaction.getType().equals("income"))
+            if(transaction.getType().equals(FilterType.INCOME))
             {
                 IncomeType incomeType = transaction.getIncomeType();
                 double amount = transaction.getAmount();
@@ -93,5 +94,16 @@ public class BudgetTracker {
 
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public List<Transaction> getTransactionsByType(FilterType type){
+        List<Transaction> filtered = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            if(transaction.getType() == type) // ignore case sensitivity
+            {
+                filtered.add(transaction);
+            }
+        }
+        return filtered;
     }
 }

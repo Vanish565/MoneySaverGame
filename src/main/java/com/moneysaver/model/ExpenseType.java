@@ -1,6 +1,6 @@
 package com.moneysaver.model;
 
-public enum Category {
+public enum ExpenseType {
     FOOD,
     TRANSPORT,
     RENT,

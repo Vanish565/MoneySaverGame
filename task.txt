@@ -47,7 +47,7 @@ tasks:
     PROJECT GOAL
     Build a budgeting system with gamification features
     Track income and expenses
-    Group spending by category
+    Group spending by expenseType
     Show financial summaries
     Later add levels, XP, and game mechanics
     SYSTEM ARCHITECTURE (LAYERED DESIGN)
@@ -83,7 +83,7 @@ tasks:
     total income
     total expenses
     balance
-    spending by category
+    spending by expenseType
     Maintains application state
 
     TransactionRepository:
@@ -132,7 +132,7 @@ tasks:
 
     Loop through transactions
     Filter by type (income/expense)
-    Group by category or income type
+    Group by expenseType or income type
     Sum values using a Map
     CURRENT FEATURE IN DEVELOPMENT
 
