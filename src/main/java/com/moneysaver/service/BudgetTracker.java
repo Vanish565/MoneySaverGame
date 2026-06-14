@@ -10,14 +10,13 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class BudgetTracker {
-//    private List<Transaction> transactions =  new ArrayList<>();
+    // private List<Transaction> transactions = new ArrayList<>();
 
     private TransactionRepository repository;
     private List<Transaction> transactions;
 
     // constructor for testing purposes
-    public BudgetTracker()
-    {
+    public BudgetTracker() {
         this.transactions = new ArrayList<>();
     }
 
@@ -29,18 +28,16 @@ public class BudgetTracker {
 
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
-        if(this.repository != null)
-        {
+        if (this.repository != null) {
             repository.saveTransactions(transactions);
         }
 
     }
 
-    public double getTotalIncome(){
+    public double getTotalIncome() {
         double total = 0;
-        for(Transaction transaction : transactions){
-            if(transaction.getType().equals(FilterType.INCOME))
-            {
+        for (Transaction transaction : transactions) {
+            if (transaction.getType().equals(FilterType.INCOME)) {
                 total += transaction.getAmount();
             }
         }
@@ -61,82 +58,80 @@ public class BudgetTracker {
         return getTotalIncome() - getTotalExpenses();
     }
 
-    public double getAverageDailyExpenses() {
-        double totalExpenses = getTotalExpenses();
+    public double getAverageDailyExpensesLast30Days() {
+        LocalDate cutoff = LocalDate.now().minusDays(29);
 
-        if (totalExpenses == 0) {
-            return 0;
-        }
+        double total = 0;
 
         for (Transaction transaction : transactions) {
-            if (transaction.getType().equals(FilterType.EXPENSE)) {
-                LocalDate transactionDate = transaction.getDate();
-                if (firstExpenseDate == null || transactionDate.isBefore(firstExpenseDate)) {
-                    firstExpenseDate = transactionDate;
-                }
+            if (transaction.getType().equals(FilterType.EXPENSE)
+                    && !transaction.getDate().isBefore(cutoff)) {
+
+                total += transaction.getAmount();
             }
         }
 
-        long daysTracked = java.time.temporal.ChronoUnit.DAYS.between(firstExpenseDate, LocalDate.now()) + 1;
-        return totalExpenses / daysTracked;
+        return total / 30.0;
     }
 
-    public double getExpenseRate() {
-        return getAverageDailyExpenses();
+    public double getAllExpensesInAMonth(int month) {
+        double totalExpenses = 0;
+
+        for (Transaction transaction : transactions) {
+            if (transaction.getType().equals(FilterType.EXPENSE) && transaction.getDate().getMonthValue() == month) {
+                totalExpenses += transaction.getAmount();
+            }
+        }
+        return totalExpenses;
     }
 
-    public int getDaysUntilBroke() {
-        double balance = getBalance();
+    private int getDaysInMonth(int month, int year) {
+        return LocalDate.of(year, month, 1).lengthOfMonth();
+    }
 
-        if (balance <= 0) {
-            return 0;
-        }
+    public double getAverageDailyExpensesInMonth(int month, int year) {
+        double totalExpenses = getAllExpensesInAMonth(month);
+        int daysInMonth = getDaysInMonth(month, year);
 
-        double averageDailyExpenses = getAverageDailyExpenses();
-        if (averageDailyExpenses == 0) {
-            return -1;
-        }
-
-        return (int) Math.ceil(balance / averageDailyExpenses);
+        return totalExpenses / daysInMonth;
     }
 
     public Map<ExpenseType, Double> getSpendingByCategory() {
         Map<ExpenseType, Double> spending = new HashMap<>();
         for (Transaction transaction : transactions) {
-            if (transaction.getType().equals(FilterType.EXPENSE))
-            {
+            if (transaction.getType().equals(FilterType.EXPENSE)) {
                 ExpenseType expenseType = transaction.getExpenseType();
                 double amount = transaction.getAmount();
 
                 spending.put(
                         expenseType,
-                        spending.getOrDefault(expenseType,0.0) + amount
-                );
+                        spending.getOrDefault(expenseType, 0.0) + amount);
             }
         }
         return spending;
     }
 
     /*
-    questions to answer:
-    where does the income data currently live? - current no where as it is not saved anywhere
-    what should getIncomeType return -> it should get a list of all income and its type
-
-    task:
-    implement the getIncomeType function.
-    implement search for transaction function
-    implement a database
+     * questions to answer:
+     * where does the income data currently live? - current no where as it is not
+     * saved anywhere
+     * what should getIncomeType return -> it should get a list of all income and
+     * its type
+     * 
+     * task:
+     * implement the getIncomeType function.
+     * implement search for transaction function
+     * implement a database
      */
 
     public Map<IncomeType, Double> getIncomeByCategory() {
         Map<IncomeType, Double> income = new HashMap<>();
         for (Transaction transaction : transactions) {
-            if(transaction.getType().equals(FilterType.INCOME))
-            {
+            if (transaction.getType().equals(FilterType.INCOME)) {
                 IncomeType incomeType = transaction.getIncomeType();
                 double amount = transaction.getAmount();
                 income.put(incomeType,
-                        income.getOrDefault(incomeType,0.0) + amount);
+                        income.getOrDefault(incomeType, 0.0) + amount);
             }
         }
         return income;
@@ -146,10 +141,10 @@ public class BudgetTracker {
         return transactions;
     }
 
-    public List<Transaction> getTransactionsByType(FilterType type){
+    public List<Transaction> getTransactionsByType(FilterType type) {
         List<Transaction> filtered = new ArrayList<>();
         for (Transaction transaction : transactions) {
-            if(transaction.getType() == type) // ignore case sensitivity
+            if (transaction.getType() == type) // ignore case sensitivity
             {
                 filtered.add(transaction);
             }
@@ -157,13 +152,12 @@ public class BudgetTracker {
         return filtered;
     }
 
-    public List<Transaction> getTransactionsBetweenDate(LocalDate startDate, LocalDate endDate){
+    public List<Transaction> getTransactionsBetweenDate(LocalDate startDate, LocalDate endDate) {
         List<Transaction> filtered = new ArrayList<>();
 
         for (Transaction transaction : transactions) {
             LocalDate transactionDate = transaction.getDate();
-            if(!transactionDate.isBefore(startDate) && !transactionDate.isAfter(endDate))
-            {
+            if (!transactionDate.isBefore(startDate) && !transactionDate.isAfter(endDate)) {
                 filtered.add(transaction);
             }
         }

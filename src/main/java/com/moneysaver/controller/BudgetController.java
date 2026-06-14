@@ -42,14 +42,6 @@ public class BudgetController {
         return budgetTracker.getBalance();
     }
 
-    public double getExpenseRate() {
-        return budgetTracker.getExpenseRate();
-    }
-
-    public int getDaysUntilBroke() {
-        return budgetTracker.getDaysUntilBroke();
-    }
-
     public Map<ExpenseType, Double> getSpendingByCategory() {
         return budgetTracker.getSpendingByCategory();
     }
@@ -70,5 +62,15 @@ public class BudgetController {
     public List<Transaction> getTransactionsBetweenDates(LocalDate startDate, LocalDate endDate)
     {
         return budgetTracker.getTransactionsBetweenDate(startDate, endDate);
+    }
+
+    public double getAllExpensesInAMonth(int month)
+    {
+        return budgetTracker.getAllExpensesInAMonth(month);
+    }
+
+    public double getAverageDailyExpensesInMonth(int month, int year)
+    {
+        return budgetTracker.getAverageDailyExpensesInMonth(month, year);
     }
 }

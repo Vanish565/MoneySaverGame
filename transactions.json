@@ -8,8 +8,8 @@
     },
     {
       "type": "EXPENSE",
-      "expenseType": "FOOD",
       "amount": 200.0,
+      "expenseType": "FOOD",
       "date": "2026-06-11"
     },
     {
@@ -23,6 +23,12 @@
       "amount": 3000.0,
       "expenseType": "RENT",
       "date": "2026-06-13"
+    },
+    {
+      "type": "EXPENSE",
+      "amount": 500.0,
+      "expenseType": "OTHER",
+      "date": "2026-06-14"
     }
   ]
 }

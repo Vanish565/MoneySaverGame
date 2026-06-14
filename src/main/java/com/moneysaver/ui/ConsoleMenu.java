@@ -1,6 +1,5 @@
 package com.moneysaver.ui;
 
-
 import com.moneysaver.controller.BudgetController;
 import com.moneysaver.model.ExpenseType;
 import com.moneysaver.model.FilterType;
@@ -32,7 +31,7 @@ public class ConsoleMenu {
             System.out.println("4. Exit");
             System.out.print("Choose: ");
 
-            int choice = getValidMenuChoice(1,4);
+            int choice = getValidMenuChoice(1, 4);
 
             switch (choice) {
                 case 1 -> addIncome();
@@ -54,16 +53,16 @@ public class ConsoleMenu {
 
         IncomeType[] incomeType = IncomeType.values();
 
-        for(int i =0; i < incomeType.length; i++){
-            System.out.println((i+1) + ". " + incomeType[i]);
+        for (int i = 0; i < incomeType.length; i++) {
+            System.out.println((i + 1) + ". " + incomeType[i]);
         }
 
         System.out.print("Choice: ");
         int choice = getValidMenuChoice(1, incomeType.length);
 
-        IncomeType selectedIncomeType = incomeType[choice-1];
+        IncomeType selectedIncomeType = incomeType[choice - 1];
 
-        budgetController.addIncome(amount,  selectedIncomeType);
+        budgetController.addIncome(amount, selectedIncomeType);
 
         System.out.println("Income recorded: " + selectedIncomeType + " | R" + amount);
     }
@@ -89,7 +88,7 @@ public class ConsoleMenu {
         System.out.println("Expense recorded: " + selectedExpenseType + " | R" + amount);
     }
 
-    private void showDetails(){
+    private void showDetails() {
         while (true) {
             System.out.println("\n=== View Details ===");
             System.out.println("1. Summary");
@@ -110,7 +109,9 @@ public class ConsoleMenu {
                 case 4 -> filterByType();
                 case 5 -> filterByDateRange();
                 case 6 -> showTransactionHistory();
-                case 7 -> {return;}
+                case 7 -> {
+                    return;
+                }
                 default -> System.out.println("Invalid option. Try again.");
             }
         }
@@ -120,14 +121,6 @@ public class ConsoleMenu {
         System.out.println("Income: " + budgetController.getIncome());
         System.out.println("Expenses: " + budgetController.getExpenses());
         System.out.println("Balance: " + budgetController.getBalance());
-        System.out.printf("Expense rate: R %.2f per day%n", budgetController.getExpenseRate());
-
-        int daysUntilBroke = budgetController.getDaysUntilBroke();
-        if (daysUntilBroke == -1) {
-            System.out.println("Days until broke: Not enough expense data");
-        } else {
-            System.out.println("Days until broke: " + daysUntilBroke);
-        }
     }
 
     private void showSpendingByCategory() {
@@ -150,7 +143,7 @@ public class ConsoleMenu {
 
         System.out.println("\nFilter by: ");
 
-        for(int i = 0; i < filterTypes.length; i++){
+        for (int i = 0; i < filterTypes.length; i++) {
             System.out.println((i + 1) + ". " + filterTypes[i]);
         }
         System.out.print("Choice: ");
@@ -196,15 +189,19 @@ public class ConsoleMenu {
             return;
         }
 
-        List<Transaction> filtered =
-                budgetController.getTransactionsBetweenDates(startDate, endDate);
+        List<Transaction> filtered = budgetController.getTransactionsBetweenDates(startDate, endDate);
 
         displayTransactions(filtered);
+
+        double monthlyExpenses = budgetController.getAllExpensesInAMonth(LocalDate.now().getMonthValue());
+        System.out.printf("Total expenses for %s: R %.2f%n", LocalDate.now().getMonth(), monthlyExpenses);
+        double averageDailyExpenses = budgetController.getAverageDailyExpensesInMonth(LocalDate.now().getMonthValue(),
+                LocalDate.now().getYear());
+        System.out.printf("Average daily expenses for %s: R %.2f%n", LocalDate.now().getMonth(), averageDailyExpenses);
     }
 
-    private void displayTransactions(List<Transaction> transactions)
-    {
-//        System.out.println("\n=== FILTERED TRANSACTIONS ===");
+    private void displayTransactions(List<Transaction> transactions) {
+        // System.out.println("\n=== FILTERED TRANSACTIONS ===");
         System.out.printf("%-12s %-10s %-18s %s%n",
                 "DATE", "TYPE", "CATEGORY", "AMOUNT");
 
@@ -251,7 +248,6 @@ public class ConsoleMenu {
         }
     }
 
-
     // checks that the choices is valid
     private int getValidMenuChoice(int min, int max) {
 
@@ -282,8 +278,7 @@ public class ConsoleMenu {
 
             try {
                 return LocalDate.parse(input);
-            }
-            catch (DateTimeParseException e) {
+            } catch (DateTimeParseException e) {
                 System.out.println("Invalid date: " + input + ". Use yyyy-mm-dd.");
             }
         }
