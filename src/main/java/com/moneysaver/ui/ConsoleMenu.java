@@ -120,6 +120,14 @@ public class ConsoleMenu {
         System.out.println("Income: " + budgetController.getIncome());
         System.out.println("Expenses: " + budgetController.getExpenses());
         System.out.println("Balance: " + budgetController.getBalance());
+        System.out.printf("Expense rate: R %.2f per day%n", budgetController.getExpenseRate());
+
+        int daysUntilBroke = budgetController.getDaysUntilBroke();
+        if (daysUntilBroke == -1) {
+            System.out.println("Days until broke: Not enough expense data");
+        } else {
+            System.out.println("Days until broke: " + daysUntilBroke);
+        }
     }
 
     private void showSpendingByCategory() {

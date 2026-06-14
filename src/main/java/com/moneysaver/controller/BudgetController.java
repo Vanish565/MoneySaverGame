@@ -42,6 +42,14 @@ public class BudgetController {
         return budgetTracker.getBalance();
     }
 
+    public double getExpenseRate() {
+        return budgetTracker.getExpenseRate();
+    }
+
+    public int getDaysUntilBroke() {
+        return budgetTracker.getDaysUntilBroke();
+    }
+
     public Map<ExpenseType, Double> getSpendingByCategory() {
         return budgetTracker.getSpendingByCategory();
     }

@@ -61,6 +61,46 @@ public class BudgetTracker {
         return getTotalIncome() - getTotalExpenses();
     }
 
+    public double getAverageDailyExpenses() {
+        double totalExpenses = getTotalExpenses();
+
+        if (totalExpenses == 0) {
+            return 0;
+        }
+
+        LocalDate firstExpenseDate = null;
+        for (Transaction transaction : transactions) {
+            if (transaction.getType().equals(FilterType.EXPENSE)) {
+                LocalDate transactionDate = transaction.getDate();
+                if (firstExpenseDate == null || transactionDate.isBefore(firstExpenseDate)) {
+                    firstExpenseDate = transactionDate;
+                }
+            }
+        }
+
+        long daysTracked = java.time.temporal.ChronoUnit.DAYS.between(firstExpenseDate, LocalDate.now()) + 1;
+        return totalExpenses / daysTracked;
+    }
+
+    public double getExpenseRate() {
+        return getAverageDailyExpenses();
+    }
+
+    public int getDaysUntilBroke() {
+        double balance = getBalance();
+
+        if (balance <= 0) {
+            return 0;
+        }
+
+        double averageDailyExpenses = getAverageDailyExpenses();
+        if (averageDailyExpenses == 0) {
+            return -1;
+        }
+
+        return (int) Math.ceil(balance / averageDailyExpenses);
+    }
+
     public Map<ExpenseType, Double> getSpendingByCategory() {
         Map<ExpenseType, Double> spending = new HashMap<>();
         for (Transaction transaction : transactions) {
