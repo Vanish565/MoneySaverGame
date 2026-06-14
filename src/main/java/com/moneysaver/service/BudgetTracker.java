@@ -68,7 +68,6 @@ public class BudgetTracker {
             return 0;
         }
 
-        LocalDate firstExpenseDate = null;
         for (Transaction transaction : transactions) {
             if (transaction.getType().equals(FilterType.EXPENSE)) {
                 LocalDate transactionDate = transaction.getDate();
